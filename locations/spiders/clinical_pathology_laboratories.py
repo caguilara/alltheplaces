@@ -1,6 +1,7 @@
 import scrapy
 
 from locations.items import Feature
+from locations.categories import apply_category, Categories
 
 
 class ClinicalPathologyLaboratoriesSpider(scrapy.Spider):
@@ -27,4 +28,6 @@ class ClinicalPathologyLaboratoriesSpider(scrapy.Spider):
                 "lat": item["lat"],
                 "lon": item["lng"],
             }
+            apply_category({"healthcare":"laboratory"}, properties)
+
             yield Feature(**properties)
