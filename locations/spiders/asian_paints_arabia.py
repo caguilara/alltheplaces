@@ -2,6 +2,7 @@ import chompjs
 from scrapy import Request, Spider
 
 from locations.dict_parser import DictParser
+from locations.categories import Categories, apply_category
 
 
 class AsianPaintsArabiaSpider(Spider):
@@ -18,4 +19,6 @@ class AsianPaintsArabiaSpider(Spider):
         for shop in chompjs.parse_js_object(response.text):
             shop["name"] = shop.pop("Company_Name")
             shop["street_address"] = shop.pop("Address")
-            yield DictParser.parse(shop)
+            item = DictParser.parse(shop)
+            apply_category(Categories.SHOP_PAINT, item)
+            yield item
