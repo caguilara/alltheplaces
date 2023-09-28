@@ -1,6 +1,8 @@
 from scrapy import Spider
 
 from locations.dict_parser import DictParser
+from locations.categories import apply_category, Categories
+
 
 
 class SonicCASpider(Spider):
@@ -10,4 +12,6 @@ class SonicCASpider(Spider):
 
     def parse(self, response, **kwargs):
         for location in response.json()["markers"]:
-            yield DictParser.parse(location)
+            item = DictParser.parse(location)
+            apply_category(Categories.FUEL_STATION, item)
+            yield item
