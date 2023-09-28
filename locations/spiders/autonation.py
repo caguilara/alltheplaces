@@ -3,6 +3,7 @@ import scrapy
 from locations.hours import DAYS, OpeningHours
 from locations.items import Feature
 from locations.spiders.vapestore_gb import clean_address
+from locations.categories import Categories, apply_category
 
 
 class AutoNationSpider(scrapy.Spider):
@@ -62,5 +63,6 @@ class AutoNationSpider(scrapy.Spider):
 
             if hours:
                 properties["opening_hours"] = hours
+            apply_category(Categories.SHOP_CAR, properties)
 
             yield Feature(**properties)
