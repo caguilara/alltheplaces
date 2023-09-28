@@ -2,6 +2,7 @@ import scrapy
 
 from locations.google_url import extract_google_position
 from locations.items import Feature
+from locations.categories import apply_category
 
 
 class AverittSpider(scrapy.spiders.SitemapSpider):
@@ -92,5 +93,6 @@ class AverittSpider(scrapy.spiders.SitemapSpider):
             "website": response.url,
         }
         extract_google_position(properties, response)
-
-        yield Feature(**properties)
+        item = Feature(**properties)
+        apply_category({"company":"logistics"} , item)
+        yield item
