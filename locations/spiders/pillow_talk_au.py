@@ -1,4 +1,5 @@
 from locations.storefinders.localisr import LocalisrSpider
+from locations.categories import apply_category
 
 
 class PillowTalkAUSpider(LocalisrSpider):
@@ -10,3 +11,7 @@ class PillowTalkAUSpider(LocalisrSpider):
     search_coordinates = [
         (-33.863276, 151.107977),
     ]
+
+    def parse_item(self, item, location):
+        apply_category({"shop":"household_linen"} , item)
+        yield item
