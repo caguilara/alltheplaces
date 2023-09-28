@@ -3,11 +3,12 @@ from scrapy.selector.unified import Selector
 
 from locations.hours import OpeningHours, day_range, sanitise_day
 from locations.items import Feature
+from locations.categories import apply_category, Categories
 
 
 class CoenMarketsSpider(scrapy.Spider):
     name = "coen_markets"
-    item_attributes = {"name": "Coen", "brand": "Coen Markets"}
+    item_attributes = {"name": "Coen", "brand": "Coen Markets", "brand_wikidata": "Q122856721"}
     start_urls = ["https://coen1923.com/locations/search"]
 
     def parse(self, response):
@@ -31,7 +32,9 @@ class CoenMarketsSpider(scrapy.Spider):
         props["phone"] = js["phone_number"]
         if hours := response.css(".hours p:not(:empty)").xpath("text()").get():
             props["opening_hours"] = self.parse_hours(hours)
-        return Feature(**props)
+        item = Feature(**props)
+        apply_category(Categories.SHOP_CONVENIENCE, item)
+        yield item
 
     @staticmethod
     def parse_hours(rules: str) -> OpeningHours():
