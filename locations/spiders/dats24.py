@@ -3,8 +3,15 @@ import json
 import scrapy
 
 from locations.items import Feature
-from locations.categories import apply_category, Categories
+from locations.categories import apply_category, Categories, Fuel, apply_yes_no
 
+fuel_map = {
+    13: Fuel.CNG,
+    14: Fuel.OCTANE_95,
+    15: Fuel.OCTANE_98,
+    16: Fuel.DIESEL,
+    58: Fuel.ADBLUE,
+}
 
 class Dats24BESpider(scrapy.Spider):
     name = "dats24_be"
@@ -38,5 +45,10 @@ class Dats24BESpider(scrapy.Spider):
                     "lon": store.get("lng"),
                 }
             )
+            services = store.get("featureIds")
+            for key, value in fuel_map.items():
+                if key in services:
+                    apply_yes_no(value, item, True)
+        
             apply_category(Categories.FUEL_STATION, item)
             yield item
