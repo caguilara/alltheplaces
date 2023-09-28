@@ -3,11 +3,12 @@ import json
 import scrapy
 
 from locations.items import Feature
+from locations.categories import apply_category
 
 
 class HalloweenCitySpider(scrapy.Spider):
     name = "halloween-city"
-    item_attributes = {"brand": "Halloween City"}
+    item_attributes = {"brand": "Halloween City", "brand_wikidata": "Q7140896"}
     download_delay = 0.2
     allowed_domains = ("stores.halloweencity.com",)
     start_urls = ("http://stores.halloweencity.com/",)
@@ -34,8 +35,9 @@ class HalloweenCitySpider(scrapy.Spider):
             "ref": store["fid"],
             "website": store["url"],
         }
-
-        return Feature(**props)
+        item = Feature(**props)
+        apply_category({"shop":"party"}, item)
+        return item
 
     def parse_city_stores(self, response):
         stores = response.xpath('//div[@class="map-list-item-section map-list-item-top"]/a/@href').extract()
