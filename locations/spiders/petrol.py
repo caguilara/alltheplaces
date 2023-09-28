@@ -42,7 +42,6 @@ class PetrolSpider(Spider):
                 elif cat["characteristic"]["key"] == "191":
                     apply_yes_no(Extras.WIFI, item, True)
             apply_category(Categories.FUEL_STATION, item)
-            apply_yes_no("advertising:totem", item, True)
             yield item
 
         if len(response.json()) == 100:
