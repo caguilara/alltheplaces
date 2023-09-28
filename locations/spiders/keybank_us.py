@@ -1,7 +1,9 @@
+import re
 from scrapy.spiders import SitemapSpider
 
 from locations.structured_data_spider import StructuredDataSpider
 from locations.user_agents import BROWSER_DEFAULT
+from locations.categories import Categories, apply_category, apply_yes_no, Extras
 
 
 class KeyBankUSSpider(SitemapSpider, StructuredDataSpider):
@@ -16,4 +18,7 @@ class KeyBankUSSpider(SitemapSpider, StructuredDataSpider):
         item["name"] = response.css("h1.address__title::text").get()
         item.pop("image")
         item.pop("twitter")
+        apply_category(Categories.BANK, item)
+        if re.search("atm", response.text):
+            apply_yes_no(Extras.ATM, item, True)
         yield item
