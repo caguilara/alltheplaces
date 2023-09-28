@@ -6,6 +6,7 @@ from scrapy.spiders import SitemapSpider
 
 from locations.hours import OpeningHours
 from locations.items import Feature
+from locations.categories import Categories, apply_category, apply_yes_no
 
 
 class NewspowerAUSpider(SitemapSpider):
@@ -51,4 +52,5 @@ class NewspowerAUSpider(SitemapSpider):
         hours_string = " ".join(filter(None, response.xpath('//table[@class="wpsl-opening-hours"]//text()').getall()))
         properties["opening_hours"] = OpeningHours()
         properties["opening_hours"].add_ranges_from_string(hours_string)
+        apply_category({"shop":"printer_ink"}, properties)
         yield Feature(**properties)
