@@ -5,6 +5,7 @@ from scrapy.http import JsonRequest
 
 from locations.dict_parser import DictParser
 from locations.hours import OpeningHours
+from locations.categories import apply_category, Categories
 
 
 class ShaverShopSpider(Spider):
@@ -39,4 +40,5 @@ class ShaverShopSpider(Spider):
             hours_string = re.sub(r"\s+", " ", location["storeHours"].replace("<br />", "").replace("<p>", "")).strip()
             item["opening_hours"] = OpeningHours()
             item["opening_hours"].add_ranges_from_string(hours_string)
+            apply_category(Categories.SHOP_BEAUTY, item)
             yield item
