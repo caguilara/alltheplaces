@@ -5,6 +5,7 @@ from scrapy.spiders import CrawlSpider, Rule
 
 from locations.hours import OpeningHours
 from locations.items import Feature
+from locations.categories import Categories, apply_category
 
 
 class MarcsSpider(CrawlSpider):
@@ -43,5 +44,6 @@ class MarcsSpider(CrawlSpider):
             "website": response.url,
             "opening_hours": oh.as_opening_hours(),
         }
-
-        yield Feature(**properties)
+        item = Feature(**properties)
+        apply_category(Categories.PHARMACY, item)
+        yield item
