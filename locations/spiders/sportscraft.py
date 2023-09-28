@@ -3,6 +3,7 @@ from scrapy.http import JsonRequest
 
 from locations.dict_parser import DictParser
 from locations.hours import OpeningHours
+from locations.categories import apply_category, Categories
 
 
 class SportscraftSpider(Spider):
@@ -33,4 +34,6 @@ class SportscraftSpider(Spider):
                         f"{hours_string} {day}: " + location[f"hours_{day}_open"] + "-" + location[f"hours_{day}_close"]
                     )
             item["opening_hours"].add_ranges_from_string(hours_string)
+            apply_category(Categories.SHOP_CLOTHES, item)
+
             yield item
