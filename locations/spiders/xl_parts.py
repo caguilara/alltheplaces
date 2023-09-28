@@ -3,11 +3,11 @@ import re
 import scrapy
 
 from locations.items import Feature
-
+from locations.categories import apply_category, Categories
 
 class XlPartsSpider(scrapy.Spider):
     name = "xl_parts"
-    item_attributes = {"brand": "XL Parts", "country": "US"}
+    item_attributes = {"brand": "XL Parts", "brand_wikidata": "Q122842222", "country": "US"}
     allowed_domains = ["www.xlparts.com"]
 
     def start_requests(self):
@@ -31,5 +31,5 @@ class XlPartsSpider(scrapy.Spider):
             pattern = rf"""data\['storeID'\] \= "{store_div}"\;.*?var lat\=([0-9.]*);.*?var longtd=([0-9.-]*);"""
             if m := re.search(pattern, script_data, flags=re.MULTILINE | re.DOTALL):
                 item["lat"], item["lon"] = m.groups()
-
+            apply_category(Categories.SHOP_CAR_PARTS, item)
             yield item
