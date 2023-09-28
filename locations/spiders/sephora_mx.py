@@ -5,6 +5,7 @@ from scrapy import Spider
 
 from locations.items import Feature
 from locations.user_agents import BROWSER_DEFAULT
+from locations.categories import Categories, apply_category
 
 
 class SephoraMXSpider(Spider):
@@ -29,4 +30,6 @@ class SephoraMXSpider(Spider):
             if " - " in properties["name"]:
                 properties["name"] = properties["name"].split(" - ", 1)[1]
             properties["ref"] = properties["name"].lower().replace(" ", "_")
-            yield Feature(**properties)
+            item = Feature(**properties)
+            apply_category(Categories.SHOP_BEAUTY, item)
+            yield item
