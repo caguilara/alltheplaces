@@ -3,6 +3,7 @@ from scrapy.selector import Selector
 
 from locations.items import Feature
 from locations.user_agents import BROWSER_DEFAULT
+from locations.categories import Categories, apply_category
 
 
 class SuzukiBeSpider(scrapy.Spider):
@@ -28,5 +29,6 @@ class SuzukiBeSpider(scrapy.Spider):
 
             item["lat"] = row.get("latitude")
             item["lon"] = row.get("longitude")
+            apply_category(Categories.SHOP_CAR, item)
 
             yield item
