@@ -2,6 +2,7 @@ import scrapy
 
 from locations.hours import OpeningHours
 from locations.items import Feature
+from locations.categories import apply_category, Categories
 
 
 class SafewayCaSpider(scrapy.Spider):
@@ -30,8 +31,10 @@ class SafewayCaSpider(scrapy.Spider):
             "phone": response.xpath('//a[contains(@href,"tel:")]/text()').extract_first(),
             "opening_hours": self.parse_hours(response),
         }
+        item = Feature(**properties)
+        apply_category(Categories.SHOP_SUPERMARKET, item)
 
-        yield Feature(**properties)
+        yield item
 
     def parse_hours(self, response):
         tbl = response.css(".holiday_hours_tbl")[-1].xpath("./tbody//text()")
