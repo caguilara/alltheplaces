@@ -111,20 +111,20 @@ class EVGoSpider(scrapy.Spider):
             )
 
     def parse_station(self, response):
-        for item in response.json().get("data"):
+        for store in response.json().get("data"):
             properties = {
-                "lat": item["latitude"],
-                "lon": item["longitude"],
-                "ref": item["id"],
-                "street_address": item["addressAddress1"],
-                "city": item["addressCity"],
-                "state": item["addressUsaStateCode"],
+                "lat": store["latitude"],
+                "lon": store["longitude"],
+                "ref": store["id"],
+                "street_address": store["addressAddress1"],
+                "city": store["addressCity"],
+                "state": store["addressUsaStateCode"],
                 "name": response.meta.get("name"),
                 "extras": {
                     "evgo:site_id": response.meta.get("site_id"),
                 },
             }
-
+            item = Feature(**properties)
             apply_category(Categories.CHARGING_STATION, item)
 
-            yield Feature(**properties)
+            yield item
