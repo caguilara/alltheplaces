@@ -3,6 +3,7 @@ from scrapy.http import JsonRequest
 
 from locations.dict_parser import DictParser
 from locations.hours import DAYS, OpeningHours
+from locations.categories import Categories, apply_category
 
 
 class MJBaleAUSpider(Spider):
@@ -40,4 +41,5 @@ class MJBaleAUSpider(Spider):
                 else:
                     for i in range(day_range["day_start"], day_range["day_end"] + 1):
                         item["opening_hours"].add_range(DAYS[i - 1], start_time, end_time, "%H%M")
+            apply_category(Categories.SHOP_CLOTHES, item)
             yield item
