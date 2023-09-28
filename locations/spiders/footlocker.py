@@ -1,6 +1,7 @@
 import scrapy
 
 from locations.linked_data_parser import LinkedDataParser
+from locations.categories import Categories, apply_category
 
 
 class FootLockerSpider(scrapy.spiders.SitemapSpider):
@@ -45,6 +46,7 @@ class FootLockerSpider(scrapy.spiders.SitemapSpider):
 
             if "stores.footlocker.com" in response.url:
                 item["country"] = "US"
+                apply_category(Categories.SHOP_SHOES, item)
                 # Other countries are handled by the TLD in pipeline code
 
             yield item
