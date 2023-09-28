@@ -3,6 +3,7 @@ import json
 import scrapy
 
 from locations.items import Feature
+from locations.categories import apply_category, Categories
 
 
 class Dats24BESpider(scrapy.Spider):
@@ -13,7 +14,7 @@ class Dats24BESpider(scrapy.Spider):
     def parse(self, response, **kwargs):
         data = json.loads(response.xpath('//script[@class="locatorMapData"]/text()').get())
         for store in data.get("stores"):
-            yield Feature(
+            item = Feature(
                 {
                     "ref": store.get("id"),
                     "name": store.get("name"),
@@ -37,3 +38,5 @@ class Dats24BESpider(scrapy.Spider):
                     "lon": store.get("lng"),
                 }
             )
+            apply_category(Categories.FUEL_STATION, item)
+            yield item
