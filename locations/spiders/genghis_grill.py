@@ -6,6 +6,7 @@ import scrapy
 
 from locations.hours import OpeningHours
 from locations.items import Feature
+from locations.categories import Categories, apply_category
 
 
 class GenghisGrillSpider(scrapy.Spider):
@@ -33,8 +34,9 @@ class GenghisGrillSpider(scrapy.Spider):
             "website": data["url"],
             "opening_hours": hours.as_opening_hours(),
         }
-
-        yield Feature(**properties)
+        item = Feature(**properties)
+        apply_category(Categories.RESTAURANT, item)
+        yield item
 
     def parse_hours(self, response):
         opening_hours = OpeningHours()
