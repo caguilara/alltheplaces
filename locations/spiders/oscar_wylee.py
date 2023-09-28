@@ -7,6 +7,7 @@ from scrapy.spiders import CrawlSpider, Rule
 from locations.google_url import extract_google_position
 from locations.hours import OpeningHours
 from locations.items import Feature
+from locations.categories import apply_category, Categories
 
 
 class OscarWyleeSpider(CrawlSpider):
@@ -46,4 +47,6 @@ class OscarWyleeSpider(CrawlSpider):
         hours_string = " ".join(filter(None, response.xpath('//div[@class="store-schedule"]//text()').getall()))
         properties["opening_hours"] = OpeningHours()
         properties["opening_hours"].add_ranges_from_string(hours_string)
-        yield Feature(**properties)
+        item = Feature(**properties)
+        apply_category(Categories.SHOP_OPTICIAN, item)
+        yield item
