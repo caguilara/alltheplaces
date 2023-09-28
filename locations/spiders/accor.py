@@ -1,5 +1,5 @@
 from locations.storefinders.woosmap import WoosmapSpider
-
+from locations.categories import Categories, apply_category
 
 class AccorSpider(WoosmapSpider):
     name = "accor"
@@ -54,4 +54,5 @@ class AccorSpider(WoosmapSpider):
         if match := self.brand_mapping.get(feature["properties"]["types"][0]):
             item.update(match)
         item["website"] = f"https://all.accor.com/hotel/{item['ref']}/index.en.shtml"
+        apply_category(Categories.HOTEL, item)
         yield item
