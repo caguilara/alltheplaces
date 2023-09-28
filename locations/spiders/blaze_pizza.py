@@ -1,6 +1,8 @@
 import scrapy
 
 from locations.dict_parser import DictParser
+from locations.categories import apply_category, Categories
+
 
 
 class BlazePizzaSpider(scrapy.Spider):
@@ -17,5 +19,5 @@ class BlazePizzaSpider(scrapy.Spider):
 
     def parse_store(self, response):
         item = DictParser.parse(response.json().get("data")[0].get("restaurants")[0])
-
+        apply_category(Categories.FAST_FOOD, item)
         yield item
