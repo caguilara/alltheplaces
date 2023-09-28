@@ -1,7 +1,7 @@
 import scrapy
 
 from locations.items import Feature
-
+from locations.categories import apply_category
 
 class CleanHarborsSpider(scrapy.Spider):
     # download_delay = 0.2
@@ -57,5 +57,6 @@ class CleanHarborsSpider(scrapy.Spider):
             "lat": float(lat),
             "lon": float(lon),
         }
-
-        yield Feature(**properties)
+        item = Feature(**properties)
+        apply_category({"industrial":"water"}, item)
+        yield item
