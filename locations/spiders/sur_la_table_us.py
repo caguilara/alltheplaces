@@ -1,6 +1,7 @@
 from scrapy.spiders import SitemapSpider
 
 from locations.structured_data_spider import StructuredDataSpider
+from locations.categories import Categories, apply_category
 
 
 class SurLaTableUSSpider(SitemapSpider, StructuredDataSpider):
@@ -14,4 +15,5 @@ class SurLaTableUSSpider(SitemapSpider, StructuredDataSpider):
         item["name"] = response.xpath('//h2[@class="locator-title"]/text()').get()
         item["email"] = response.xpath('//a[@title="Email"]/@href').get("").replace("mailTo:", "").strip()
         item["ref"] = item.get("email", "").split("@", 1)[0].replace("slt", "")
+        apply_category({"shop":"kitchen"}, item)
         yield item
